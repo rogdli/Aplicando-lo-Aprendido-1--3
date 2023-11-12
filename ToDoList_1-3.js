@@ -13,7 +13,7 @@ function createTask(title, description = '', difficulty) {
     description: description,
     status: "pendiente",
     creationDate: Date(),
-    expireDate: Date(),
+    expireDate: null,
   };
   taskList.push(task);
 }
@@ -66,7 +66,7 @@ function editTask(task) {
 
 function displayMainMenu (){
     console.log("Menú principal");
-    console.log("1. Ver mis tareas\n2. Buscar una tarea\n3. Mostrar lista de tareas\n0. Salir");
+    console.log("1. Ver mis tareas\n2. Buscar una tarea\n3. Crear tarea\n0. Salir");
   };
 
   function displaySubMenu(){
@@ -155,7 +155,8 @@ function mainMenu() {
             rl.question("Ingrese el título de la tarea: ", (title) => {
               rl.question("Ingrese la descripción de la tarea: ", (description) => {
                 rl.question("Ingrese la dificultad de la tarea: ", (difficulty) => {
-                  createTask(title, description, difficulty);
+                  rl.question("Ingrese la fecha de vencimiento (formato dd/mm/yyyy): ", (expireDate) => {
+                    createTask(title, description, difficulty, expireDate);
                   console.log("Tarea creada con éxito.");
                   rl.question("Presiona Enter para volver al Menú Principal.", () => {
                     mainMenu();

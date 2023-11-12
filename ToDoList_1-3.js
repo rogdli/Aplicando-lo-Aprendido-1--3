@@ -47,22 +47,24 @@ function showTask(task) {
 }
 
 function editTask(task) {
-  rl.question("Nuevo título (Enter para mantener el actual): ", (newTitle) => {
-    rl.question("Nueva descripción (Enter para mantener la actual): ", (newDescription) => {
-      rl.question("Nueva dificultad (Enter para mantener la actual): ", (newDifficulty) => {
-        // Actualizar la tarea con la información proporcionada
-        task.title = newTitle || task.title;
-        task.description = newDescription || task.description;
-        task.difficulty = newDifficulty || task.difficulty;
-
-        console.log("Tarea editada con éxito.");
-        rl.question("Presiona Enter para volver al Menú Principal.", () => {
-          mainMenu();
+    rl.question("Nuevo título (Enter para mantener el actual): ", (newTitle) => {
+      rl.question("Nueva descripción (Enter para mantener la actual): ", (newDescription) => {
+        rl.question("Nueva dificultad (Enter para mantener la actual): ", (newDifficulty) => {
+          rl.question("Nueva fecha de vencimiento (formato dd/mm/yyyy, Enter para mantener la actual): ", (newExpireDate) => {
+            task.title = newTitle || task.title;
+            task.description = newDescription || task.description;
+            task.difficulty = newDifficulty || task.difficulty;
+            task.expireDate = newExpireDate || task.expireDate;
+  
+            console.log("Tarea editada con éxito.");
+            rl.question("Presiona Enter para volver al Menú Principal.", () => {
+              mainMenu();
+            });
+          });
         });
       });
     });
-  });
-}
+  }
 
 function displayMainMenu (){
     console.log("Menú principal");
@@ -137,7 +139,7 @@ function mainMenu() {
             });
             break;
 
-          case 2:
+          case '2':
             rl.question("Ingrese el título de la tarea a buscar: ", (taskTitle) => {
               for (let i = 0; i < taskList.length; i++) {
                 if (taskList[i].title === taskTitle) {
@@ -153,23 +155,24 @@ function mainMenu() {
 
           case '3':
             rl.question("Ingrese el título de la tarea: ", (title) => {
-              rl.question("Ingrese la descripción de la tarea: ", (description) => {
-                rl.question("Ingrese la dificultad de la tarea: ", (difficulty) => {
-                  rl.question("Ingrese la fecha de vencimiento (formato dd/mm/yyyy): ", (expireDate) => {
-                    createTask(title, description, difficulty, expireDate);
-                  console.log("Tarea creada con éxito.");
+                rl.question("Ingrese la descripción de la tarea: ", (description) => {
+                  rl.question("Ingrese la dificultad de la tarea: ", (difficulty) => {
+                    rl.question("Ingrese la fecha de vencimiento (formato dd/mm/yyyy): ", (expireDate) => {
+                      createTask(title, description, difficulty, expireDate);
+                      console.log("Tarea creada con éxito.");
                   rl.question("Presiona Enter para volver al Menú Principal.", () => {
                     mainMenu();
                   });
+                    });
+                  });
                 });
               });
-            });
             break;
 
-          case '0':
-            console.log("Fin del programa \n");
-            rl.close();
-            break;
+            case '0':
+  console.log("Fin del programa \n");
+  rl.close();
+  break;
 
           default:
             console.log("Opción no válida. Intente de nuevo.");

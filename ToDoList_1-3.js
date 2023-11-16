@@ -36,17 +36,27 @@ function showTask(task) {
   console.log("Fecha de vencimiento:", task.expireDate);
   console.log("Dificultad:", getDifficultyStars(task.difficulty));
   console.log("Última edición:", task.lastEditDate);
+}
 
-  rl.question("\nPresione 'E' para editar la tarea, '0' para volver: \n", (response) => {
-    if (response.toLowerCase() === 'e') {
-      editTask(task);
-    } else if (response === '0') {
-      mainMenu();
-    } else {
-      console.log("Opción no válida. Volviendo al Menú Principal.");
-      mainMenu();
-    }
-  });
+function showTaskAndEdit(task) {
+    console.log("Titulo:", task.title);
+    console.log("Estado:", task.status);
+    console.log("Descripción:", task.description);
+    console.log("Fecha de creación:", task.creationDate);
+    console.log("Fecha de vencimiento:", task.expireDate);
+    console.log("Dificultad:", getDifficultyStars(task.difficulty));
+    console.log("Última edición:", task.lastEditDate);
+  
+    rl.question("\nPresione 'E' para editar la tarea, '0' para volver: \n", (response) => {
+      if (response.toLowerCase() === 'e') {
+        editTask(task);
+      } else if (response === '0') {
+        mainMenu();
+      } else {
+        console.log("Opción no válida. Volviendo al Menú Principal.");
+        mainMenu();
+      }
+    });
 }
 
 function getDifficultyStars(difficulty) {
@@ -63,25 +73,28 @@ function getDifficultyStars(difficulty) {
 }
 
 function editTask(task) {
-  rl.question("Nuevo título (Enter para mantener el actual): ", (newTitle) => {
-    rl.question("Nueva descripción (Enter para mantener la actual): ", (newDescription) => {
-      rl.question("Nueva dificultad (Enter para mantener la actual): ", (newDifficulty) => {
-        rl.question("Nueva fecha de vencimiento (formato dd/mm/yyyy, Enter para mantener la actual): ", (newExpireDate) => {
-          task.title = newTitle || task.title;
-          task.description = newDescription || task.description;
-          task.difficulty = newDifficulty || task.difficulty;
-          task.expireDate = newExpireDate || task.expireDate;
-          task.lastEditDate = Date();
-
-          console.log("Tarea editada con éxito.");
-          rl.question("Presiona Enter para volver al Menú Principal.", () => {
-            mainMenu();
+    rl.question("Nuevo título (Enter para mantener el actual): ", (newTitle) => {
+      rl.question("Nueva descripción (Enter para mantener la actual): ", (newDescription) => {
+        rl.question("Nuevo estado (en curso/pendiente/terminada) (Enter para mantener el actual): ", (newStatus) => {
+          rl.question("Nueva dificultad (Enter para mantener la actual): ", (newDifficulty) => {
+            rl.question("Nueva fecha de vencimiento (formato dd/mm/yyyy, Enter para mantener la actual): ", (newExpireDate) => {
+              task.title = newTitle || task.title;
+              task.description = newDescription || task.description;
+              task.status = newStatus || task.status;
+              task.difficulty = newDifficulty || task.difficulty;
+              task.expireDate = newExpireDate || task.expireDate;
+              task.lastEditDate = Date();
+  
+              console.log("Tarea editada con éxito.");
+              rl.question("Presiona Enter para volver al Menú Principal.", () => {
+                mainMenu();
+              });
+            });
           });
         });
       });
     });
-  });
-}
+  }
 
 function displayMainMenu() {
   console.log("Menú principal");
@@ -105,25 +118,19 @@ function mainMenu() {
 
           rl.question("?", (sub_menu) => {
             switch (sub_menu) {
-              case '1': // Todas
+                case '1': // Todas
                 console.log("Mostrando todas las tareas...\n");
-
+              
                 taskList.sort((a, b) => a.title.localeCompare(b.title));
-
+              
                 for (let i = 0; i < taskList.length; i++) {
                   showTask(taskList[i]);
                 }
-                break;
-
-              case '2': // Pendientes
-                console.log("Mostrando todas las tareas pendientes...\n");
-
-                for (let i = 0; i < taskList.length; i++) {
-                  if (taskList[i].status.toLowerCase() === "pendiente") {
-                    showTask(taskList[i]);
-                  }
-                }
-                break;
+              
+                rl.question("Presiona Enter para volver al Menú Principal.", () => {
+                  mainMenu();
+                });
+                break; 
 
               case '3': // En curso
                 console.log("Mostrando todas las tareas en curso...\n");
@@ -139,7 +146,7 @@ function mainMenu() {
                 console.log("Mostrando todas las tareas terminadas...\n");
 
                 for (let i = 0; i < taskList.length; i++) {
-                  if (taskList[i].status.toLowerCase() === "terminadas") {
+                  if (taskList[i].status.toLowerCase() === "terminada") {
                     showTask(taskList[i]);
                   }
                 }
@@ -155,19 +162,26 @@ function mainMenu() {
           });
           break;
 
-        case '2':
-          rl.question("Ingrese el título de la tarea a buscar: ", (taskTitle) => {
-            for (let i = 0; i < taskList.length; i++) {
-              if (taskList[i].title === taskTitle) {
-                showTask(taskList[i]);
-                break;
+          case '2':
+            rl.question("Ingrese el título de la tarea a buscar: ", (taskTitle) => {
+              let taskFound = false;
+              for (let i = 0; i < taskList.length; i++) {
+                if (taskList[i].title === taskTitle) {
+                  showTaskAndEdit(taskList[i]);
+                  taskFound = true;
+                  break;
+                }
               }
-            }
-            rl.question("Presiona Enter para volver al Menú Principal.", () => {
-              mainMenu();
+          
+              if (!taskFound) {
+                console.log("Tarea no encontrada.");
+              }
+          
+              rl.question("Presiona Enter para volver al Menú Principal.", () => {
+                mainMenu();
+              });
             });
-          });
-          break;
+            break;
 
         case '3':
           rl.question("Ingrese el título de la tarea: ", (title) => {
@@ -201,4 +215,5 @@ function mainMenu() {
 }
 
 mainMenu();
+
 
